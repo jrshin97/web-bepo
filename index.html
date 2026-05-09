@@ -13,17 +13,20 @@
   .sec-purple { background: #EEEDFE33; border-color: #534AB7; }
   .sec-teal   { background: #E1F5EE33; border-color: #0F6E56; }
   .sec-amber  { background: #FAEEDA33; border-color: #854F0B; }
+  .sec-coral  { background: #FAECE733; border-color: #993C1D; }
   .sec-green  { background: #EAF3DE33; border-color: #3B6D11; }
   .sec-head { display: flex; align-items: center; gap: 8px; margin-bottom: 1rem; }
   .sec-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
   .dot-purple { background: #534AB7; }
   .dot-teal   { background: #0F6E56; }
   .dot-amber  { background: #854F0B; }
+  .dot-coral  { background: #993C1D; }
   .dot-green  { background: #3B6D11; }
   .sec-title { font-size: 13px; font-weight: 500; }
   .title-purple { color: #3C3489; }
   .title-teal   { color: #085041; }
   .title-amber  { color: #633806; }
+  .title-coral  { color: #712B13; }
   .title-green  { color: #27500A; }
   .btn-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; }
   .sim-btn {
@@ -51,6 +54,8 @@
   .pink.sim-btn:hover   { border-color: #993556; }
   .amber.sim-btn  { border-color: #EF9F27; }
   .amber.sim-btn:hover  { border-color: #854F0B; }
+  .red.sim-btn    { border-color: #F09595; }
+  .red.sim-btn:hover    { border-color: #A32D2D; }
   .btn-top { height: 4px; width: 100%; display: block; }
   .btn-body { padding: 12px 14px 8px; flex: 1; display: flex; flex-direction: column; gap: 3px; }
   .btn-name { font-size: 14px; font-weight: 500; color: var(--color-text-primary); margin: 0; }
@@ -69,7 +74,8 @@
   .pink   .btn-tag { background: #FBEAF0; color: #993556; }
   .amber  .btn-top { background: #BA7517; }
   .amber  .btn-tag { background: #FAEEDA; color: #854F0B; }
-
+  .red    .btn-top { background: #E24B4A; }
+  .red    .btn-tag { background: #FCEBEB; color: #A32D2D; }
   .playground-btn {
     display: flex;
     align-items: center;
@@ -85,7 +91,7 @@
   }
   .playground-btn:hover { background: #C0DD97; border-color: #27500A; transform: translateY(-2px); }
   .playground-btn:active { transform: scale(0.98); }
-  .pg-icon { width: 52px; height: 52px; border-radius: 50%; background: #3B6D11; display: flex; align-items: center; justify-content: center; font-size: 26px; flex-shrink: 0; }
+  .pg-icon { width: 52px; height: 52px; border-radius: 50%; background: #3B6D11; display: flex; align-items: center; justify-content: center; font-size: 26px; flex-shrink: 0; color: #EAF3DE; }
   .pg-text { display: flex; flex-direction: column; gap: 3px; flex: 1; }
   .pg-name { font-size: 16px; font-weight: 500; color: #173404; margin: 0; }
   .pg-eng  { font-size: 12px; color: #3B6D11; margin: 0; }
@@ -157,6 +163,20 @@
         <span class="btn-top"></span>
         <div class="btn-body"><p class="btn-name">K-평균</p><p class="btn-eng">K-Means Clustering</p></div>
         <div class="btn-footer"><span class="btn-tag">군집화</span></div>
+      </a>
+    </div>
+  </div>
+
+  <div class="section sec-coral">
+    <div class="sec-head">
+      <span class="sec-dot dot-coral"></span>
+      <span class="sec-title title-coral">딥러닝</span>
+    </div>
+    <div class="btn-grid" style="grid-template-columns: repeat(auto-fit, minmax(140px, 300px));">
+      <a class="sim-btn red" href="https://luminousky.com/Visual-Assets-for-CS-Teacher/%EC%9D%B8%EA%B3%B5%EC%A7%80%EB%8A%A5%EA%B8%B0%EC%B4%88(2015%EA%B0%9C%EC%A0%95)/2-3-2.Deep-Learning.html" target="_blank">
+        <span class="btn-top"></span>
+        <div class="btn-body"><p class="btn-name">딥러닝 개념과 활용</p><p class="btn-eng">Deep Learning</p></div>
+        <div class="btn-footer"><span class="btn-tag">딥러닝</span></div>
       </a>
     </div>
   </div>
