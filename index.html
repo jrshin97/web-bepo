@@ -1,198 +1,223 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>기계학습 실습 시뮬레이터 — 이매고등학교 인공지능기초</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif; background: #f7f7f9; color: #1a1a2e; }
 
-<style>
-  .wrap { padding: 2rem 1rem 2.5rem; max-width: 680px; margin: 0 auto; }
-  .hero { margin-bottom: 2rem; }
-  .hero-title { font-size: 22px; font-weight: 500; color: var(--color-text-primary); margin: 0 0 4px; }
-  .hero-sub { font-size: 14px; color: var(--color-text-secondary); margin: 0; }
-  .section {
-    border-radius: 20px;
-    padding: 1.25rem 1.25rem 1rem;
-    margin-bottom: 1rem;
-    border: 2px solid;
-  }
-  .sec-purple { background: #EEEDFE33; border-color: #534AB7; }
-  .sec-teal   { background: #E1F5EE33; border-color: #0F6E56; }
-  .sec-amber  { background: #FAEEDA33; border-color: #854F0B; }
-  .sec-coral  { background: #FAECE733; border-color: #993C1D; }
-  .sec-green  { background: #EAF3DE33; border-color: #3B6D11; }
-  .sec-head { display: flex; align-items: center; gap: 8px; margin-bottom: 1rem; }
-  .sec-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-  .dot-purple { background: #534AB7; }
-  .dot-teal   { background: #0F6E56; }
-  .dot-amber  { background: #854F0B; }
-  .dot-coral  { background: #993C1D; }
-  .dot-green  { background: #3B6D11; }
-  .sec-title { font-size: 13px; font-weight: 500; }
-  .title-purple { color: #3C3489; }
-  .title-teal   { color: #085041; }
-  .title-amber  { color: #633806; }
-  .title-coral  { color: #712B13; }
-  .title-green  { color: #27500A; }
-  .btn-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; }
-  .sim-btn {
-    display: flex; flex-direction: column; justify-content: space-between;
-    min-height: 90px;
-    background: var(--color-background-primary);
-    border: 1.5px solid;
-    border-radius: 16px;
-    padding: 0;
-    text-decoration: none;
-    overflow: hidden;
-    transition: border-color 0.12s, transform 0.1s, background 0.12s;
-  }
-  .sim-btn:hover { background: var(--color-background-secondary); transform: translateY(-2px); }
-  .sim-btn:active { transform: scale(0.97); }
-  .purple.sim-btn { border-color: #AFA9EC; }
-  .purple.sim-btn:hover { border-color: #534AB7; }
-  .teal.sim-btn   { border-color: #5DCAA5; }
-  .teal.sim-btn:hover   { border-color: #0F6E56; }
-  .coral.sim-btn  { border-color: #F0997B; }
-  .coral.sim-btn:hover  { border-color: #993C1D; }
-  .blue.sim-btn   { border-color: #85B7EB; }
-  .blue.sim-btn:hover   { border-color: #185FA5; }
-  .pink.sim-btn   { border-color: #ED93B1; }
-  .pink.sim-btn:hover   { border-color: #993556; }
-  .amber.sim-btn  { border-color: #EF9F27; }
-  .amber.sim-btn:hover  { border-color: #854F0B; }
-  .red.sim-btn    { border-color: #F09595; }
-  .red.sim-btn:hover    { border-color: #A32D2D; }
-  .btn-top { height: 4px; width: 100%; display: block; }
-  .btn-body { padding: 12px 14px 8px; flex: 1; display: flex; flex-direction: column; gap: 3px; }
-  .btn-name { font-size: 14px; font-weight: 500; color: var(--color-text-primary); margin: 0; }
-  .btn-eng { font-size: 11px; color: var(--color-text-tertiary); margin: 0; }
-  .btn-footer { padding: 0 14px 10px; display: flex; justify-content: flex-end; }
-  .btn-tag { font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 20px; }
-  .purple .btn-top { background: #7F77DD; }
-  .purple .btn-tag { background: #EEEDFE; color: #534AB7; }
-  .teal   .btn-top { background: #1D9E75; }
-  .teal   .btn-tag { background: #E1F5EE; color: #0F6E56; }
-  .coral  .btn-top { background: #D85A30; }
-  .coral  .btn-tag { background: #FAECE7; color: #993C1D; }
-  .blue   .btn-top { background: #378ADD; }
-  .blue   .btn-tag { background: #E6F1FB; color: #185FA5; }
-  .pink   .btn-top { background: #D4537E; }
-  .pink   .btn-tag { background: #FBEAF0; color: #993556; }
-  .amber  .btn-top { background: #BA7517; }
-  .amber  .btn-tag { background: #FAEEDA; color: #854F0B; }
-  .red    .btn-top { background: #E24B4A; }
-  .red    .btn-tag { background: #FCEBEB; color: #A32D2D; }
-  .playground-btn {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    width: 100%;
-    background: #EAF3DE;
-    border: 2px dashed #3B6D11;
-    border-radius: 20px;
-    padding: 1.1rem 1.5rem;
-    text-decoration: none;
-    transition: background 0.12s, transform 0.1s, border-color 0.12s;
-    box-sizing: border-box;
-  }
-  .playground-btn:hover { background: #C0DD97; border-color: #27500A; transform: translateY(-2px); }
-  .playground-btn:active { transform: scale(0.98); }
-  .pg-icon { width: 52px; height: 52px; border-radius: 50%; background: #3B6D11; display: flex; align-items: center; justify-content: center; font-size: 26px; flex-shrink: 0; color: #EAF3DE; }
-  .pg-text { display: flex; flex-direction: column; gap: 3px; flex: 1; }
-  .pg-name { font-size: 16px; font-weight: 500; color: #173404; margin: 0; }
-  .pg-eng  { font-size: 12px; color: #3B6D11; margin: 0; }
-  .pg-arrow { font-size: 22px; color: #3B6D11; flex-shrink: 0; }
-</style>
+    .wrap { padding: 2rem 1rem 2.5rem; max-width: 680px; margin: 0 auto; }
+    .hero { margin-bottom: 2rem; }
+    .hero-school { font-size: 13px; color: #888; margin: 0 0 6px; }
+    .hero-title { font-size: 20px; font-weight: 600; color: #1a1a2e; margin: 0; line-height: 1.4; }
 
-<div class="wrap">
-  <p class="hero-sub">이매고등학교 3학년 인공지능기초</p>
-  <h1 class="sr-only">기계학습 실습 시뮬레이터</h1>
-  <div class="hero">
-    <p class="hero-title">알고리즘별 실습 링크 모음 (학습하고 싶은 알고리즘을 선택하세요)</p>
-  </div>
+    .section {
+      border-radius: 20px;
+      padding: 1.25rem 1.25rem 1rem;
+      margin-bottom: 1rem;
+      border: 2px solid;
+    }
+    .sec-purple { background: #EEEDFE33; border-color: #534AB7; }
+    .sec-teal   { background: #E1F5EE33; border-color: #0F6E56; }
+    .sec-amber  { background: #FAEEDA33; border-color: #854F0B; }
+    .sec-coral  { background: #FAECE733; border-color: #993C1D; }
+    .sec-green  { background: #EAF3DE33; border-color: #3B6D11; }
 
-  <div class="section sec-purple">
-    <div class="sec-head">
-      <span class="sec-dot dot-purple"></span>
-      <span class="sec-title title-purple">지도학습 — 회귀</span>
-    </div>
-    <div class="btn-grid">
-      <a class="sim-btn purple" href="https://luminousky.com/Visual-Assets-for-CS-Teacher/%EC%9D%B8%EA%B3%B5%EC%A7%80%EB%8A%A5%EA%B8%B0%EC%B4%88(2015%EA%B0%9C%EC%A0%95)/2-3-1.%EA%B8%B0%EA%B3%84%ED%95%99%EC%8A%B5-Linear-Regression.html" target="_blank">
-        <span class="btn-top"></span>
-        <div class="btn-body"><p class="btn-name">선형회귀</p><p class="btn-eng">Linear Regression</p></div>
-        <div class="btn-footer"><span class="btn-tag">회귀</span></div>
-      </a>
-      <a class="sim-btn purple" href="https://luminousky.com/Visual-Assets-for-CS-Teacher/%EC%9D%B8%EA%B3%B5%EC%A7%80%EB%8A%A5%EA%B8%B0%EC%B4%88(2015%EA%B0%9C%EC%A0%95)/2-3-1.%EA%B8%B0%EA%B3%84%ED%95%99%EC%8A%B5-Polynomial-Regression.html" target="_blank">
-        <span class="btn-top"></span>
-        <div class="btn-body"><p class="btn-name">다중선형회귀</p><p class="btn-eng">Polynomial Regression</p></div>
-        <div class="btn-footer"><span class="btn-tag">회귀</span></div>
-      </a>
-    </div>
-  </div>
+    .sec-head { display: flex; align-items: center; gap: 8px; margin-bottom: 1rem; }
+    .sec-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .dot-purple { background: #534AB7; }
+    .dot-teal   { background: #0F6E56; }
+    .dot-amber  { background: #854F0B; }
+    .dot-coral  { background: #993C1D; }
+    .dot-green  { background: #3B6D11; }
 
-  <div class="section sec-teal">
-    <div class="sec-head">
-      <span class="sec-dot dot-teal"></span>
-      <span class="sec-title title-teal">지도학습 — 분류</span>
-    </div>
-    <div class="btn-grid">
-      <a class="sim-btn coral" href="https://luminousky.com/Visual-Assets-for-CS-Teacher/%EC%9D%B8%EA%B3%B5%EC%A7%80%EB%8A%A5%EA%B8%B0%EC%B4%88(2015%EA%B0%9C%EC%A0%95)/2-3-1.%EA%B8%B0%EA%B3%84%ED%95%99%EC%8A%B5-Logistic-Regression.html" target="_blank">
-        <span class="btn-top"></span>
-        <div class="btn-body"><p class="btn-name">로지스틱회귀</p><p class="btn-eng">Logistic Regression</p></div>
-        <div class="btn-footer"><span class="btn-tag">분류</span></div>
-      </a>
-      <a class="sim-btn teal" href="https://luminousky.com/Visual-Assets-for-CS-Teacher/%EC%9D%B8%EA%B3%B5%EC%A7%80%EB%8A%A5%EA%B8%B0%EC%B4%88(2015%EA%B0%9C%EC%A0%95)/2-3-1.%EA%B8%B0%EA%B3%84%ED%95%99%EC%8A%B5-Decision-Tree.html" target="_blank">
-        <span class="btn-top"></span>
-        <div class="btn-body"><p class="btn-name">의사결정트리</p><p class="btn-eng">Decision Tree</p></div>
-        <div class="btn-footer"><span class="btn-tag">분류</span></div>
-      </a>
-      <a class="sim-btn blue" href="https://luminousky.com/Visual-Assets-for-CS-Teacher/%EC%9D%B8%EA%B3%B5%EC%A7%80%EB%8A%A5%EA%B8%B0%EC%B4%88(2015%EA%B0%9C%EC%A0%95)/2-3-1.%EA%B8%B0%EA%B3%84%ED%95%99%EC%8A%B5-K-NN.html" target="_blank">
-        <span class="btn-top"></span>
-        <div class="btn-body"><p class="btn-name">K-NN</p><p class="btn-eng">K-Nearest Neighbors</p></div>
-        <div class="btn-footer"><span class="btn-tag">분류</span></div>
-      </a>
-      <a class="sim-btn pink" href="https://luminousky.com/Visual-Assets-for-CS-Teacher/%EC%9D%B8%EA%B3%B5%EC%A7%80%EB%8A%A5%EA%B8%B0%EC%B4%88(2015%EA%B0%9C%EC%A0%95)/2-3-1.%EA%B8%B0%EA%B3%84%ED%95%99%EC%8A%B5-K-NN.html" target="_blank">
-        <span class="btn-top"></span>
-        <div class="btn-body"><p class="btn-name">SVM</p><p class="btn-eng">Support Vector Machine</p></div>
-        <div class="btn-footer"><span class="btn-tag">분류</span></div>
-      </a>
-    </div>
-  </div>
+    .sec-title { font-size: 13px; font-weight: 600; }
+    .title-purple { color: #3C3489; }
+    .title-teal   { color: #085041; }
+    .title-amber  { color: #633806; }
+    .title-coral  { color: #712B13; }
+    .title-green  { color: #27500A; }
 
-  <div class="section sec-amber">
-    <div class="sec-head">
-      <span class="sec-dot dot-amber"></span>
-      <span class="sec-title title-amber">비지도학습 — 군집화</span>
-    </div>
-    <div class="btn-grid" style="grid-template-columns: repeat(auto-fit, minmax(140px, 200px));">
-      <a class="sim-btn amber" href="https://luminousky.com/Visual-Assets-for-CS-Teacher/%EC%9D%B8%EA%B3%B5%EC%A7%80%EB%8A%A5%EA%B8%B0%EC%B4%88(2015%EA%B0%9C%EC%A0%95)/2-3-1.%EA%B8%B0%EA%B3%84%ED%95%99%EC%8A%B5-K-Means.html" target="_blank">
-        <span class="btn-top"></span>
-        <div class="btn-body"><p class="btn-name">K-평균</p><p class="btn-eng">K-Means Clustering</p></div>
-        <div class="btn-footer"><span class="btn-tag">군집화</span></div>
-      </a>
-    </div>
-  </div>
+    .btn-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; }
 
-  <div class="section sec-coral">
-    <div class="sec-head">
-      <span class="sec-dot dot-coral"></span>
-      <span class="sec-title title-coral">딥러닝</span>
-    </div>
-    <div class="btn-grid" style="grid-template-columns: repeat(auto-fit, minmax(140px, 300px));">
-      <a class="sim-btn red" href="https://luminousky.com/Visual-Assets-for-CS-Teacher/%EC%9D%B8%EA%B3%B5%EC%A7%80%EB%8A%A5%EA%B8%B0%EC%B4%88(2015%EA%B0%9C%EC%A0%95)/2-3-2.Deep-Learning.html" target="_blank">
-        <span class="btn-top"></span>
-        <div class="btn-body"><p class="btn-name">딥러닝 개념과 활용</p><p class="btn-eng">Deep Learning</p></div>
-        <div class="btn-footer"><span class="btn-tag">딥러닝</span></div>
-      </a>
-    </div>
-  </div>
+    .sim-btn {
+      display: flex; flex-direction: column; justify-content: space-between;
+      min-height: 90px;
+      background: #fff;
+      border: 1.5px solid;
+      border-radius: 16px;
+      padding: 0;
+      text-decoration: none;
+      overflow: hidden;
+      transition: border-color 0.12s, transform 0.1s, box-shadow 0.12s;
+    }
+    .sim-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+    .sim-btn:active { transform: scale(0.97); }
 
-  <div class="section sec-green">
-    <div class="sec-head">
-      <span class="sec-dot dot-green"></span>
-      <span class="sec-title title-green">통합 실습 도구</span>
+    .purple.sim-btn { border-color: #AFA9EC; }
+    .purple.sim-btn:hover { border-color: #534AB7; }
+    .teal.sim-btn   { border-color: #5DCAA5; }
+    .teal.sim-btn:hover   { border-color: #0F6E56; }
+    .coral.sim-btn  { border-color: #F0997B; }
+    .coral.sim-btn:hover  { border-color: #993C1D; }
+    .blue.sim-btn   { border-color: #85B7EB; }
+    .blue.sim-btn:hover   { border-color: #185FA5; }
+    .pink.sim-btn   { border-color: #ED93B1; }
+    .pink.sim-btn:hover   { border-color: #993556; }
+    .amber.sim-btn  { border-color: #EF9F27; }
+    .amber.sim-btn:hover  { border-color: #854F0B; }
+    .red.sim-btn    { border-color: #F09595; }
+    .red.sim-btn:hover    { border-color: #A32D2D; }
+
+    .btn-top { height: 4px; width: 100%; display: block; }
+    .btn-body { padding: 12px 14px 8px; flex: 1; display: flex; flex-direction: column; gap: 3px; }
+    .btn-name { font-size: 14px; font-weight: 600; color: #1a1a2e; margin: 0; }
+    .btn-eng  { font-size: 11px; color: #999; margin: 0; }
+    .btn-footer { padding: 0 14px 10px; display: flex; justify-content: flex-end; }
+    .btn-tag { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 20px; }
+
+    .purple .btn-top { background: #7F77DD; }
+    .purple .btn-tag { background: #EEEDFE; color: #534AB7; }
+    .teal   .btn-top { background: #1D9E75; }
+    .teal   .btn-tag { background: #E1F5EE; color: #0F6E56; }
+    .coral  .btn-top { background: #D85A30; }
+    .coral  .btn-tag { background: #FAECE7; color: #993C1D; }
+    .blue   .btn-top { background: #378ADD; }
+    .blue   .btn-tag { background: #E6F1FB; color: #185FA5; }
+    .pink   .btn-top { background: #D4537E; }
+    .pink   .btn-tag { background: #FBEAF0; color: #993556; }
+    .amber  .btn-top { background: #BA7517; }
+    .amber  .btn-tag { background: #FAEEDA; color: #854F0B; }
+    .red    .btn-top { background: #E24B4A; }
+    .red    .btn-tag { background: #FCEBEB; color: #A32D2D; }
+
+    /* 플레이그라운드 버튼 */
+    .playground-btn {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      width: 100%;
+      background: #EAF3DE;
+      border: 2px dashed #3B6D11;
+      border-radius: 20px;
+      padding: 1.1rem 1.5rem;
+      text-decoration: none;
+      transition: background 0.12s, transform 0.1s, border-color 0.12s, box-shadow 0.12s;
+    }
+    .playground-btn:hover { background: #C0DD97; border-color: #27500A; transform: translateY(-2px); box-shadow: 0 4px 16px rgba(59,109,17,0.15); }
+    .playground-btn:active { transform: scale(0.98); }
+    .pg-icon { width: 52px; height: 52px; border-radius: 50%; background: #3B6D11; display: flex; align-items: center; justify-content: center; font-size: 26px; flex-shrink: 0; color: #EAF3DE; }
+    .pg-text { display: flex; flex-direction: column; gap: 3px; flex: 1; }
+    .pg-name { font-size: 16px; font-weight: 600; color: #173404; margin: 0; }
+    .pg-eng  { font-size: 12px; color: #3B6D11; margin: 0; }
+    .pg-arrow { font-size: 22px; color: #3B6D11; flex-shrink: 0; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <p class="hero-school">이매고등학교 3학년 인공지능기초</p>
+    <div class="hero">
+      <p class="hero-title">알고리즘별 실습 링크 모음<br><span style="font-weight:400; font-size:15px; color:#666;">학습하고 싶은 알고리즘을 선택하세요</span></p>
     </div>
-    <a class="playground-btn" href="https://ml-playground.com/#" target="_blank">
-      <div class="pg-icon">&#9654;</div>
-      <div class="pg-text">
-        <p class="pg-name">머신러닝 플레이그라운드</p>
-        <p class="pg-eng">Machine Learning Playground</p>
+
+    <!-- 지도학습 — 회귀 -->
+    <div class="section sec-purple">
+      <div class="sec-head">
+        <span class="sec-dot dot-purple"></span>
+        <span class="sec-title title-purple">지도학습 — 회귀</span>
       </div>
-      <span class="pg-arrow">&#8599;</span>
-    </a>
+      <div class="btn-grid">
+        <a class="sim-btn purple" href="https://luminousky.com/Visual-Assets-for-CS-Teacher/%EC%9D%B8%EA%B3%B5%EC%A7%80%EB%8A%A5%EA%B8%B0%EC%B4%88(2015%EA%B0%9C%EC%A0%95)/2-3-1.%EA%B8%B0%EA%B3%84%ED%95%99%EC%8A%B5-Linear-Regression.html" target="_blank">
+          <span class="btn-top"></span>
+          <div class="btn-body"><p class="btn-name">선형회귀</p><p class="btn-eng">Linear Regression</p></div>
+          <div class="btn-footer"><span class="btn-tag">회귀</span></div>
+        </a>
+        <a class="sim-btn purple" href="https://luminousky.com/Visual-Assets-for-CS-Teacher/%EC%9D%B8%EA%B3%B5%EC%A7%80%EB%8A%A5%EA%B8%B0%EC%B4%88(2015%EA%B0%9C%EC%A0%95)/2-3-1.%EA%B8%B0%EA%B3%84%ED%95%99%EC%8A%B5-Polynomial-Regression.html" target="_blank">
+          <span class="btn-top"></span>
+          <div class="btn-body"><p class="btn-name">다중선형회귀</p><p class="btn-eng">Polynomial Regression</p></div>
+          <div class="btn-footer"><span class="btn-tag">회귀</span></div>
+        </a>
+      </div>
+    </div>
+
+    <!-- 지도학습 — 분류 -->
+    <div class="section sec-teal">
+      <div class="sec-head">
+        <span class="sec-dot dot-teal"></span>
+        <span class="sec-title title-teal">지도학습 — 분류</span>
+      </div>
+      <div class="btn-grid">
+        <a class="sim-btn coral" href="https://luminousky.com/Visual-Assets-for-CS-Teacher/%EC%9D%B8%EA%B3%B5%EC%A7%80%EB%8A%A5%EA%B8%B0%EC%B4%88(2015%EA%B0%9C%EC%A0%95)/2-3-1.%EA%B8%B0%EA%B3%84%ED%95%99%EC%8A%B5-Logistic-Regression.html" target="_blank">
+          <span class="btn-top"></span>
+          <div class="btn-body"><p class="btn-name">로지스틱회귀</p><p class="btn-eng">Logistic Regression</p></div>
+          <div class="btn-footer"><span class="btn-tag">분류</span></div>
+        </a>
+        <a class="sim-btn teal" href="https://luminousky.com/Visual-Assets-for-CS-Teacher/%EC%9D%B8%EA%B3%B5%EC%A7%80%EB%8A%A5%EA%B8%B0%EC%B4%88(2015%EA%B0%9C%EC%A0%95)/2-3-1.%EA%B8%B0%EA%B3%84%ED%95%99%EC%8A%B5-Decision-Tree.html" target="_blank">
+          <span class="btn-top"></span>
+          <div class="btn-body"><p class="btn-name">의사결정트리</p><p class="btn-eng">Decision Tree</p></div>
+          <div class="btn-footer"><span class="btn-tag">분류</span></div>
+        </a>
+        <a class="sim-btn blue" href="https://luminousky.com/Visual-Assets-for-CS-Teacher/%EC%9D%B8%EA%B3%B5%EC%A7%80%EB%8A%A5%EA%B8%B0%EC%B4%88(2015%EA%B0%9C%EC%A0%95)/2-3-1.%EA%B8%B0%EA%B3%84%ED%95%99%EC%8A%B5-K-NN.html" target="_blank">
+          <span class="btn-top"></span>
+          <div class="btn-body"><p class="btn-name">K-NN</p><p class="btn-eng">K-Nearest Neighbors</p></div>
+          <div class="btn-footer"><span class="btn-tag">분류</span></div>
+        </a>
+        <a class="sim-btn pink" href="https://luminousky.com/Visual-Assets-for-CS-Teacher/%EC%9D%B8%EA%B3%B5%EC%A7%80%EB%8A%A5%EA%B8%B0%EC%B4%88(2015%EA%B0%9C%EC%A0%95)/2-3-1.%EA%B8%B0%EA%B3%84%ED%95%99%EC%8A%B5-SVM.html" target="_blank">
+          <span class="btn-top"></span>
+          <div class="btn-body"><p class="btn-name">SVM</p><p class="btn-eng">Support Vector Machine</p></div>
+          <div class="btn-footer"><span class="btn-tag">분류</span></div>
+        </a>
+      </div>
+    </div>
+
+    <!-- 비지도학습 — 군집화 -->
+    <div class="section sec-amber">
+      <div class="sec-head">
+        <span class="sec-dot dot-amber"></span>
+        <span class="sec-title title-amber">비지도학습 — 군집화</span>
+      </div>
+      <div class="btn-grid" style="grid-template-columns: repeat(auto-fit, minmax(140px, 200px));">
+        <a class="sim-btn amber" href="https://luminousky.com/Visual-Assets-for-CS-Teacher/%EC%9D%B8%EA%B3%B5%EC%A7%80%EB%8A%A5%EA%B8%B0%EC%B4%88(2015%EA%B0%9C%EC%A0%95)/2-3-1.%EA%B8%B0%EA%B3%84%ED%95%99%EC%8A%B5-K-Means.html" target="_blank">
+          <span class="btn-top"></span>
+          <div class="btn-body"><p class="btn-name">K-평균</p><p class="btn-eng">K-Means Clustering</p></div>
+          <div class="btn-footer"><span class="btn-tag">군집화</span></div>
+        </a>
+      </div>
+    </div>
+
+    <!-- 딥러닝 -->
+    <div class="section sec-coral">
+      <div class="sec-head">
+        <span class="sec-dot dot-coral"></span>
+        <span class="sec-title title-coral">딥러닝</span>
+      </div>
+      <div class="btn-grid" style="grid-template-columns: repeat(auto-fit, minmax(140px, 300px));">
+        <a class="sim-btn red" href="https://luminousky.com/Visual-Assets-for-CS-Teacher/%EC%9D%B8%EA%B3%B5%EC%A7%80%EB%8A%A5%EA%B8%B0%EC%B4%88(2015%EA%B0%9C%EC%A0%95)/2-3-2.Deep-Learning.html" target="_blank">
+          <span class="btn-top"></span>
+          <div class="btn-body"><p class="btn-name">딥러닝 개념과 활용</p><p class="btn-eng">Deep Learning</p></div>
+          <div class="btn-footer"><span class="btn-tag">딥러닝</span></div>
+        </a>
+      </div>
+    </div>
+
+    <!-- 통합 실습 도구 -->
+    <div class="section sec-green">
+      <div class="sec-head">
+        <span class="sec-dot dot-green"></span>
+        <span class="sec-title title-green">통합 실습 도구</span>
+      </div>
+      <a class="playground-btn" href="https://ml-playground.com/#" target="_blank">
+        <div class="pg-icon">&#9654;</div>
+        <div class="pg-text">
+          <p class="pg-name">머신러닝 플레이그라운드</p>
+          <p class="pg-eng">Machine Learning Playground</p>
+        </div>
+        <span class="pg-arrow">&#8599;</span>
+      </a>
+    </div>
+
   </div>
-</div>
+</body>
+</html>
